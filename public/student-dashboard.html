@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Exam System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">📚 Exam System</div>
+        <div class="nav-menu">
+            <span id="studentName" class="nav-user"></span>
+            <button onclick="logout()" class="btn btn-secondary btn-sm">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Student Dashboard</h1>
+            <p>Welcome! View and take your exams here.</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('available')">Available Exams</button>
+            <button class="tab-btn" onclick="showTab('history')">My History</button>
+            <button class="tab-btn" onclick="showTab('results')">My Results</button>
+            <button class="tab-btn" onclick="showTab('profile')">Profile</button>
+        </div>
+
+        <!-- Available Exams Tab -->
+        <div id="availableTab" class="tab-content active">
+            <h2>Available Exams</h2>
+            <div id="availableExams" class="exam-list">
+                <div class="loading">Loading exams...</div>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="historyTab" class="tab-content">
+            <h2>Exam History</h2>
+            <div id="examHistory" class="exam-list">
+                <div class="loading">Loading history...</div>
+            </div>
+        </div>
+
+        <!-- Results Tab -->
+        <div id="resultsTab" class="tab-content">
+            <h2>My Results</h2>
+            <div id="myResults" class="results-list">
+                <div class="loading">Loading results...</div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profileTab" class="tab-content">
+            <h2>My Profile</h2>
+            <div class="profile-section">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="profileName">Full Name</label>
+                        <input type="text" id="profileName" name="full_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profileEmail">Email</label>
+                        <input type="email" id="profileEmail" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="profileRoll">Roll Number</label>
+                        <input type="text" id="profileRoll" name="roll_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileDept">Department</label>
+                        <input type="text" id="profileDept" name="department">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileSem">Semester</label>
+                        <input type="number" id="profileSem" name="semester" min="1" max="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePhone">Phone</label>
+                        <input type="tel" id="profilePhone" name="phone" pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="/js/student-dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taking Exam - Exam System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="exam-page">
+    <nav class="navbar">
+        <div class="nav-brand">📚 <span id="examTitle">Exam</span></div>
+        <div class="exam-timer">
+            <span class="timer-icon">⏱️</span>
+            <span id="timer" class="timer">00:00</span>
+        </div>
+    </nav>
+
+    <div class="exam-container">
+        <!-- Question Navigation Sidebar -->
+        <div class="question-nav">
+            <h3>Questions</h3>
+            <div id="questionNavList" class="question-nav-list">
+                <!-- Question buttons will be inserted here -->
+            </div>
+            <div class="nav-legend">
+                <div class="legend-item">
+                    <span class="legend-box answered"></span>
+                    <span>Answered</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box current"></span>
+                    <span>Current</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box unanswered"></span>
+                    <span>Not Answered</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Question Area -->
+        <div class="question-area">
+            <div id="questionContent" class="question-content">
+                <div class="loading">Loading exam...</div>
+            </div>
+
+            <div class="question-actions">
+                <button id="prevBtn" class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                <button id="nextBtn" class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                <button id="submitBtn" class="btn btn-success" onclick="confirmSubmit()" style="display: none;">Submit
+                    Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div id="submitModal" class="modal">
+        <div class="modal-content">
+            <h2>Submit Exam?</h2>
+            <p>Are you sure you want to submit the exam?</p>
+            <p><strong>Answered: <span id="answeredCount">0</span> / <span id="totalCount">0</span></strong></p>
+            <p class="text-warning">You will not be able to change your answers after submission.</p>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="submitExam()">Yes, Submit</button>
+                <button class="btn btn-secondary" onclick="closeModal('submitModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time's Up Modal -->
+    <div id="timeUpModal" class="modal">
+        <div class="modal-content">
+            <h2>Time's Up!</h2>
+            <p>Your exam time has expired. Your answers have been auto-submitted.</p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="viewResult()">View Result</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="/js/exam.js"></script>
+</body>
+
+</html>

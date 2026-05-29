@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Online Examination System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Online Examination System</h2>
+                <span class="role-badge">Teacher</span>
+            </div>
+            <ul class="nav-menu">
+                <li><span id="teacherName">Loading...</span></li>
+                <li><button onclick="logout()" class="btn btn-danger btn-sm">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="dashboard">
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>My Exams</h3>
+                    <p class="stat-number" id="totalExams">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Questions</h3>
+                    <p class="stat-number" id="totalQuestions">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Student Attempts</h3>
+                    <p class="stat-number" id="totalAttempts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <p class="stat-number" id="completedAttempts">0</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('myExams')">My Exams</button>
+                <button class="tab-btn" onclick="showTab('questions')">Questions</button>
+                <button class="tab-btn" onclick="showTab('results')">Results</button>
+                <button class="tab-btn" onclick="showTab('profile')">Profile</button>
+            </div>
+
+            <!-- Tab: My Exams -->
+            <div id="myExamsTab" class="tab-content active">
+                <div class="section-header">
+                    <h2>My Exams</h2>
+                    <button class="btn btn-primary" onclick="showCreateExamModal()">Create New Exam</button>
+                </div>
+                <div id="examsList" class="grid">
+                    <p class="text-muted">Loading exams...</p>
+                </div>
+            </div>
+
+            <!-- Tab: Questions -->
+            <div id="questionsTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Manage Questions</h2>
+                </div>
+                <div class="form-group">
+                    <label>Select Exam</label>
+                    <select id="examSelect" class="form-control" onchange="loadQuestions()">
+                        <option value="">Select an exam...</option>
+                    </select>
+                </div>
+                <div class="section-header">
+                    <h3 id="questionsTitle">Select an exam to manage questions</h3>
+                    <div>
+                        <button class="btn btn-primary" onclick="showAddQuestionModal()" id="addQuestionBtn"
+                            disabled>Add Question</button>
+                        <button class="btn btn-secondary" onclick="showBulkUploadModal()" id="bulkUploadBtn"
+                            disabled>Bulk Upload CSV</button>
+                    </div>
+                </div>
+                <div id="questionsList">
+                    <p class="text-muted">Select an exam to view questions</p>
+                </div>
+            </div>
+
+            <!-- Tab: Results -->
+            <div id="resultsTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Student Results</h2>
+                </div>
+                <div class="form-group">
+                    <label>Select Exam</label>
+                    <select id="resultsExamSelect" class="form-control" onchange="loadResults()">
+                        <option value="">Select an exam...</option>
+                    </select>
+                </div>
+                <div id="resultsList">
+                    <p class="text-muted">Select an exam to view results</p>
+                </div>
+            </div>
+
+            <!-- Tab: Profile -->
+            <div id="profileTab" class="tab-content">
+                <div class="section-header">
+                    <h2>My Profile</h2>
+                </div>
+                <form id="profileForm" class="form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profileFullName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Employee ID</label>
+                        <input type="text" id="profileEmployeeId" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" id="profileDepartment" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="profileSubject" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="profilePhone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profileEmail" class="form-control" readonly>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create/Edit Exam -->
+    <div id="examModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="examModalTitle">Create New Exam</h3>
+                <span class="close" onclick="closeModal('examModal')">&times;</span>
+            </div>
+            <form id="examForm">
+                <input type="hidden" id="examId">
+                <div class="form-group">
+                    <label>Exam Title</label>
+                    <input type="text" id="examTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="examDesc" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Duration (minutes)</label>
+                        <input type="number" id="examDuration" class="form-control" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Marks</label>
+                        <input type="number" id="examTotalMarks" class="form-control" required min="1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Passing Marks</label>
+                        <input type="number" id="examPassingMarks" class="form-control" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Active</label>
+                        <input type="checkbox" id="examActive" checked>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="datetime-local" id="examStartTime" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="datetime-local" id="examEndTime" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('examModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Exam</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Question -->
+    <div id="questionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Question</h3>
+                <span class="close" onclick="closeModal('questionModal')">&times;</span>
+            </div>
+            <form id="questionForm">
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <textarea id="questionText" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Option A</label>
+                    <input type="text" id="optionA" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Option B</label>
+                    <input type="text" id="optionB" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Option C</label>
+                    <input type="text" id="optionC" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Option D</label>
+                    <input type="text" id="optionD" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Correct Option</label>
+                        <select id="correctOption" class="form-control" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Marks</label>
+                        <input type="number" id="questionMarks" class="form-control" required min="1" value="1">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('questionModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Bulk Upload -->
+    <div id="bulkUploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bulk Upload Questions</h3>
+                <span class="close" onclick="closeModal('bulkUploadModal')">&times;</span>
+            </div>
+            <form id="bulkUploadForm">
+                <div class="form-group">
+                    <label>CSV File</label>
+                    <input type="file" id="csvFile" class="form-control" accept=".csv" required>
+                    <small class="form-text">Upload CSV with columns: question_text, option_a, option_b, option_c,
+                        option_d, correct_option, marks</small>
+                </div>
+                <div class="modal-actions">
+                    <a href="/api/questions/csv-template" class="btn btn-secondary" download>Download Template</a>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('bulkUploadModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/teacher-dashboard.js"></script>
+</body>
+
+</html>

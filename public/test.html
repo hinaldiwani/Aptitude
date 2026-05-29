@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Page</title>
+</head>
+
+<body>
+    <h1>Testing...</h1>
+    <button id="testBtn">Test API</button>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const output = document.getElementById('output');
+            output.innerHTML = 'Testing...<br>';
+
+            // Test 1: Health check
+            try {
+                const health = await fetch('/api/health');
+                output.innerHTML += '✓ Health check: ' + health.status + '<br>';
+            } catch (e) {
+                output.innerHTML += '✗ Health check failed: ' + e + '<br>';
+            }
+
+            // Test 2: Login
+            try {
+                const login = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'admin@college.edu', password: 'admin123' })
+                });
+                const data = await login.json();
+                output.innerHTML += '✓ Login: ' + (data.success ? 'SUCCESS' : 'FAILED') + '<br>';
+                if (data.success) {
+                    localStorage.setItem('token', data.data.token);
+                    output.innerHTML += 'Token: ' + data.data.token.substring(0, 20) + '...<br>';
+                }
+            } catch (e) {
+                output.innerHTML += '✗ Login failed: ' + e + '<br>';
+            }
+
+            // Test 3: Protected route
+            try {
+                const token = localStorage.getItem('token');
+                const exams = await fetch('/api/exams', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const examsData = await exams.json();
+                output.innerHTML += '✓ Protected route: ' + exams.status + ' - ' + examsData.message + '<br>';
+            } catch (e) {
+                output.innerHTML += '✗ Protected route failed: ' + e + '<br>';
+            }
+        });
+    </script>
+</body>
+
+</html>
