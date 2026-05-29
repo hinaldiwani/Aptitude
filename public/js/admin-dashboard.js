@@ -47,12 +47,18 @@ function checkAuth() {
 }
 
 // Show tab
-function showTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+function showTab(tabName, btn) {
+    // determine button element if not provided
+    if (!btn) {
+        btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(button => button.classList.remove('active'));
+    if (btn) btn.classList.add('active');
 
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    document.getElementById(`${tabName}Tab`).classList.add('active');
+    const tabContent = document.getElementById(`${tabName}Tab`);
+    if (tabContent) tabContent.classList.add('active');
 
     switch (tabName) {
         case 'exams':
@@ -116,7 +122,7 @@ async function loadExams() {
             container.innerHTML = data.data.map(exam => `
                 <div class="exam-card">
                     <div class="exam-header">
-                        <h3 class="exam-title">${exam.title}</h3>
+                        <h3 class="exam-title"><a href="#" onclick="openExamQuestions(${exam.id}); return false;">${exam.title}</a></h3>
                         <p>${exam.description || 'No description'}</p>
                     </div>
                     <div class="exam-info">
@@ -269,6 +275,23 @@ async function loadExamsForSelect() {
         }
     } catch (error) {
         console.error('Error loading exams:', error);
+    }
+}
+
+// Open questions view for a specific exam
+async function openExamQuestions(examId) {
+    // switch to Questions tab
+    showTab('questions');
+
+    // ensure select is populated
+    await loadExamsForSelect();
+
+    const select = document.getElementById('examSelect');
+    if (select) {
+        select.value = examId;
+        // set currentExamId and load questions
+        currentExamId = examId;
+        loadQuestions();
     }
 }
 
