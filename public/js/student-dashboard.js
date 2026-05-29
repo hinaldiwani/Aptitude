@@ -105,7 +105,7 @@ async function loadAvailableExams() {
                         </div>
                         <div class="info-item">
                             <span class="info-label">Questions</span>
-                            <span class="info-value">${exam.question_count}</span>
+                            <span class="info-value">${exam.question_count ?? 0}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Passing Marks</span>
