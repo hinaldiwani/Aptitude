@@ -123,6 +123,7 @@ async function loadExams() {
                 <div class="exam-card">
                     <div class="exam-header">
                         <h3 class="exam-title"><a href="#" onclick="openExamQuestions(${exam.id}); return false;">${exam.title}</a></h3>
+                            ${((exam.question_count ?? 0) === 0) ? `<div class="no-questions-badge">No questions</div>` : ''}
                         <p>${exam.description || 'No description'}</p>
                     </div>
                     <div class="exam-info">
